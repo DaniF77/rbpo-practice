@@ -21,3 +21,7 @@ Thumbs.db
 
 # Отчёты Horusec (если будут)
 .horusec/
+
+# ПР2: собранный бинарник
+pr2/cpp/vulnerable
+*.db

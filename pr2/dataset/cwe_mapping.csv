@@ -1,0 +1,11 @@
+﻿cwe_id,cwe_name,rank_2025,owasp_category,typical_impact
+CWE-79,Cross-site Scripting,1,A03 Injection,"Захват сессии, кража данных"
+CWE-89,SQL Injection,2,A03 Injection,"Утечка данных, обход аутентификации"
+CWE-78,OS Command Injection,9,A03 Injection,Удалённое выполнение кода
+CWE-120,Buffer Overflow,11,—,"Выполнение кода, падение программы"
+CWE-639,Authorization Bypass Through User-Controlled Key (IDOR),24,A01 Broken Access Control,Доступ к чужим данным
+CWE-134,Format String,—,A03 Injection,"Утечка памяти, выполнение кода"
+CWE-256,Plaintext Storage of a Password,—,A02 Cryptographic Failures,Компрометация всех учётных записей при утечке БД
+CWE-798,Use of Hard-coded Credentials,—,A07 Identification and Authentication Failures,Подделка сессий
+CWE-307,Improper Restriction of Excessive Authentication Attempts,—,A07 Identification and Authentication Failures,Подбор пароля
+CWE-476,NULL Pointer Dereference,13,—,Отказ в обслуживании (в этих проектах не найдено)

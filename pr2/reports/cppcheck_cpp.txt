@@ -1,0 +1,4 @@
+cpp/vulnerable.cpp:8: [style] constParameterPointer (CWE-398): Parameter 'input' can be declared as pointer to const
+cpp/vulnerable.cpp:15: [style] constParameterPointer (CWE-398): Parameter 'input' can be declared as pointer to const
+cpp/vulnerable.cpp:20: [style] constParameterPointer (CWE-398): Parameter 'input' can be declared as pointer to const
+nofile:0: [information] checkersReport (CWE-0): Active checkers: 172/592 (use --checkers-report=<filename> to see details)

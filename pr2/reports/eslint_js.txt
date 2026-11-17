@@ -1,0 +1,6 @@
+
+/root/jsrun/vulnerable.js
+  31:3  warning  Found child_process.exec() with non Literal first argument  security/detect-child-process
+
+✖ 1 problem (0 errors, 1 warning)
+

@@ -1,0 +1,3 @@
+vulnmart/app.py:19:18: S105 Possible hardcoded password assigned to: "secret_key"
+vulnmart/app.py:133:17: S608 Possible SQL injection vector through string-based query construction
+Found 2 errors.

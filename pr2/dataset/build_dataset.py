@@ -1,0 +1,39 @@
+"""Собирает датасет уязвимостей (CSV + JSON) и таблицу сопоставления CWE."""
+import csv, json, os
+here = os.path.dirname(os.path.abspath(__file__))
+
+COLS = ["vuln_id","language","file","line","severity","cwe_id","cwe_name","owasp","cve_example","cve_cvss_nvd","cvss_expert","detected_by","description"]
+rows = [
+ [1,"Python","vulnmart/app.py",133,"Critical","CWE-89","SQL Injection","A03 Injection","CVE-2019-25676","9.8 (v3.1)",9.8,"Ruff S608; DAST (admin' --); Bandit — пропустил","SQL-запрос входа собирается f-строкой из username и password"],
+ [2,"Python","vulnmart/templates/product.html",15,"Medium","CWE-79","Stored XSS","A03 Injection","CVE-2005-3308","4.3 (v2)",6.1,"DAST (<script> в отзыве); Bandit и Ruff — пропустили","Комментарий выводится фильтром |safe без экранирования"],
+ [3,"Python","vulnmart/app.py",204,"Medium","CWE-639","IDOR (обход авторизации через ключ)","A01 Broken Access Control","CVE-2019-7890","7.3 (v3.1)",6.5,"DAST (sarah читает заказ admin); SAST — пропустил","Запрос заказа без проверки user_id владельца"],
+ [4,"Python","vulnmart/app.py",78,"High","CWE-256","Пароли хранятся в открытом виде","A02 Cryptographic Failures","CVE-2026-86715","7.1 (v3.1)",7.5,"Просмотр БД (sqlite3); SAST — пропустил","Таблица users хранит password без хеширования"],
+ [5,"Python","vulnmart/app.py",19,"High","CWE-798","Жёстко заданный секретный ключ сессии","A07 Identification and Authentication Failures","—","—",9.1,"Ruff S105","secret_key зашит в код: можно подделать cookie сессии"],
+ [6,"Python","vulnmart/app.py",124,"High","CWE-307","Нет ограничения попыток входа","A07 Identification and Authentication Failures","—","—",7.5,"DAST (30 попыток подряд, везде 200)","Форма /login допускает неограниченный подбор пароля"],
+ [7,"C++","cpp/vulnerable.cpp",10,"High","CWE-120","Buffer Overflow","—","CVE-2017-16338","9.9 (v3.1)",7.8,"Flawfinder; DAST (stack smashing); Cppcheck — пропустил","strcpy в буфер 10 байт без проверки длины"],
+ [8,"C++","cpp/vulnerable.cpp",16,"High","CWE-134","Format String","A03 Injection","CVE-2012-0809","7.2 (v2)",7.8,"Flawfinder; DAST (%x выводит стек); Cppcheck — пропустил","printf с пользовательской строкой в роли формата"],
+ [9,"C++","cpp/vulnerable.cpp",23,"High","CWE-78","OS Command Injection","A03 Injection","CVE-2026-30880","9.8 (v3.1)",7.8,"Flawfinder; DAST (hi;id выполнил id)","system() с командой, собранной из ввода"],
+ [10,"JavaScript","js/vulnerable.js",16,"Critical","CWE-89","SQL Injection","A03 Injection","CVE-2020-37243","8.2 (v3.1)",9.8,"DAST (' OR '1'='1); ESLint — пропустил","Шаблонная строка подставляет username в SQL"],
+ [11,"JavaScript","js/vulnerable.js",24,"Medium","CWE-79","Reflected XSS","A03 Injection","CVE-2005-3308","4.3 (v2)",6.1,"DAST (<script> вернулся в HTML); ESLint — пропустил","Параметр name выводится в HTML без экранирования"],
+ [12,"JavaScript","js/vulnerable.js",31,"Critical","CWE-78","OS Command Injection","A03 Injection","CVE-2026-30880","9.8 (v3.1)",9.8,"ESLint security/detect-child-process; DAST (127.0.0.1; id)","exec() с шаблонной строкой из параметра host"],
+]
+with open(os.path.join(here,"vulnerabilities.csv"),"w",newline="",encoding="utf-8-sig") as f:
+    w=csv.writer(f); w.writerow(COLS); w.writerows(rows)
+with open(os.path.join(here,"vulnerabilities.json"),"w",encoding="utf-8") as f:
+    json.dump([dict(zip(COLS,r)) for r in rows],f,ensure_ascii=False,indent=2)
+
+cwe = [
+ ["CWE-79","Cross-site Scripting",1,"A03 Injection","Захват сессии, кража данных"],
+ ["CWE-89","SQL Injection",2,"A03 Injection","Утечка данных, обход аутентификации"],
+ ["CWE-78","OS Command Injection",9,"A03 Injection","Удалённое выполнение кода"],
+ ["CWE-120","Buffer Overflow",11,"—","Выполнение кода, падение программы"],
+ ["CWE-639","Authorization Bypass Through User-Controlled Key (IDOR)",24,"A01 Broken Access Control","Доступ к чужим данным"],
+ ["CWE-134","Format String","—","A03 Injection","Утечка памяти, выполнение кода"],
+ ["CWE-256","Plaintext Storage of a Password","—","A02 Cryptographic Failures","Компрометация всех учётных записей при утечке БД"],
+ ["CWE-798","Use of Hard-coded Credentials","—","A07 Identification and Authentication Failures","Подделка сессий"],
+ ["CWE-307","Improper Restriction of Excessive Authentication Attempts","—","A07 Identification and Authentication Failures","Подбор пароля"],
+ ["CWE-476","NULL Pointer Dereference",13,"—","Отказ в обслуживании (в этих проектах не найдено)"],
+]
+with open(os.path.join(here,"cwe_mapping.csv"),"w",newline="",encoding="utf-8-sig") as f:
+    w=csv.writer(f); w.writerow(["cwe_id","cwe_name","rank_2025","owasp_category","typical_impact"]); w.writerows(cwe)
+print(len(rows),"vulns,",len(cwe),"cwe rows")

