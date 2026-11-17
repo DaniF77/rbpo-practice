@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>ИАС БИ — Дашборд</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+  .card { background: white; border-radius: 8px; padding: 16px 20px; margin: 10px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .critical { border-left: 5px solid #d32f2f; } .high { border-left: 5px solid #f57c00; }
+  .medium { border-left: 5px solid #fbc02d; } .low { border-left: 5px solid #388e3c; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #ddd; }
+  .badge { padding: 2px 8px; border-radius: 4px; color: white; font-size: 12px; }
+  input { padding: 6px; }
+  button { padding: 6px 14px; }
+</style>
+</head>
+<body>
+<h1>ИАС БИ — информационно-аналитическая система безопасности</h1>
+
+<div class="card">
+  <h2>Запустить сканирование</h2>
+  <input type="text" id="target" placeholder="IP-адрес" value="127.0.0.1">
+  <button onclick="runScan()">Сканировать</button>
+  <span id="status"></span>
+</div>
+
+<div class="card"><h2>Инциденты</h2><div id="incidents">Пока нет результатов.</div></div>
+
+<div class="card">
+  <h2>Распределение находок по серьёзности</h2>
+  <div style="height:220px"><canvas id="severityChart"></canvas></div>
+  <div id="chartFallback"></div>
+</div>
+
+<script>
+const API = 'http://127.0.0.1:8080';
+const COLORS = { critical: '#d32f2f', high: '#f57c00', medium: '#fbc02d', low: '#388e3c' };
+let results = {};     // цель -> результат
+let chart;
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function runScan() {
+  const target = document.getElementById('target').value.trim();
+  document.getElementById('status').innerText = ' ⏳ Сканирование (до пары минут)...';
+  try {
+    const r = await fetch(API + '/scan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ target }) });
+    if (!r.ok) throw new Error(await r.text());
+    results[target] = await r.json();
+    render();
+    document.getElementById('status').innerText = ' ✅ Готово';
+  } catch (e) {
+    document.getElementById('status').innerText = ' ❌ Ошибка: ' + e.message;
+  }
+}
+
+async function loadIncidents() {           // при открытии страницы показываем прошлые сканирования
+  try { results = await (await fetch(API + '/incidents')).json(); render(); } catch (e) { /* API ещё не запущен */ }
+}
+
+function render() {
+  const counts = { critical: 0, high: 0, medium: 0, low: 0 };
+  let html = '';
+  for (const [target, res] of Object.entries(results)) {
+    const inc = res.incident;
+    const cls = inc.detected ? (inc.risk_score >= 9 ? 'critical' : 'high') : 'low';
+    html += `<div class="card ${cls}"><h3>Цель: ${esc(target)} — приоритет ${esc(inc.priority)}</h3>`;
+    html += `<p>Инцидент: <b>${inc.detected ? 'ДА' : 'НЕТ'}</b>, оценка риска: <b>${inc.risk_score}</b>, категория: ${esc(inc.category)}</p>`;
+    html += '<table><tr><th>Источник</th><th>Порт</th><th>Серьёзность</th><th>Описание</th></tr>';
+    for (const f of res.findings) {
+      if (counts[f.severity] !== undefined) counts[f.severity]++;
+      html += `<tr><td>${esc(f.source)}</td><td>${esc(f.port ?? '-')}</td>` +
+              `<td><span class="badge" style="background:${COLORS[f.severity] || '#757575'}">${esc(f.severity)}</span></td><td>${esc(f.description)}</td></tr>`;
+    }
+    html += '</table>';
+    if (inc.recommendations.length) html += '<h4>Рекомендации:</h4><ul>' + inc.recommendations.map(r => `<li>${esc(r)}</li>`).join('') + '</ul>';
+    html += '</div>';
+  }
+  document.getElementById('incidents').innerHTML = html || 'Пока нет результатов.';
+  drawChart(counts);
+}
+
+function drawChart(c) {
+  if (typeof Chart === 'undefined') {      // нет доступа к CDN — выводим числа текстом
+    document.getElementById('chartFallback').innerText = `critical: ${c.critical}, high: ${c.high}, medium: ${c.medium}, low: ${c.low}`;
+    return;
+  }
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('severityChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels: ['Critical', 'High', 'Medium', 'Low'],
+            datasets: [{ label: 'Количество находок', data: [c.critical, c.high, c.medium, c.low],
+                         backgroundColor: [COLORS.critical, COLORS.high, COLORS.medium, COLORS.low] }] },
+    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+}
+loadIncidents();
+</script>
+</body>
+</html>

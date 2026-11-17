@@ -1,0 +1,11 @@
+# создано RuleManager 2026-11-18, версия правила 1
+- name: "Открытый RDP"
+  category: "unauthorized_access"
+  risk_score: 8.5
+  conditions:
+    - field: "port"
+      operator: "eq"
+      value: 3389
+  recommendations:
+    - "Закрыть порт 3389"
+    - "Использовать VPN"

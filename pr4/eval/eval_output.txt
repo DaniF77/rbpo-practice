@@ -1,0 +1,48 @@
+23 сценариев; 13 с инцидентом
+
+=== 1. Базовые правила (rules.yaml) ===
+Правил в системе: 8   сценариев: 23
+{
+  "precision": 0.8,
+  "recall": 0.6154,
+  "f1_score": 0.6957,
+  "accuracy": 0.6957,
+  "confusion_matrix": {
+    "TP": 8,
+    "FP": 2,
+    "FN": 5,
+    "TN": 8
+  }
+}
+Ошибки детектора:
+   FN: P6 — RDP 3389 открыт
+   FN: P7 — MySQL 3306 доступен из сети
+   FN: P8 — OpenSSH 7.4 (старая версия)
+   FN: P9 — FTP с анонимным входом
+   FN: P10 — Доступен файл /.env
+   FP: T1 — Каталог /.github/ (публичные workflow) — не утечка
+   FP: T2 — Apache 2.4.57 с упоминанием совместимости 2.2
+
+=== 2. Добавляем недостающие правила через RuleManager (Java) ===
+[data_breach] Открыт MySQL (риск 8.0) если service eq mysql  <открыт_mysql.yaml>
+[unauthorized_access] Открыт FTP (риск 8.0) если service eq ftp  <открыт_ftp.yaml>
+[vulnerable_component] Устаревший OpenSSH (риск 7.5) если version contains OpenSSH 7.  <устаревший_openssh.yaml>
+[information_disclosure] Доступен .env (риск 8.5) если description contains .env  <доступен_env.yaml>
+
+=== 3. После добавления правил ===
+Правил в системе: 13   сценариев: 23
+{
+  "precision": 0.8667,
+  "recall": 1.0,
+  "f1_score": 0.9286,
+  "accuracy": 0.913,
+  "confusion_matrix": {
+    "TP": 13,
+    "FP": 2,
+    "FN": 0,
+    "TN": 8
+  }
+}
+Ошибки детектора:
+   FP: T1 — Каталог /.github/ (публичные workflow) — не утечка
+   FP: T2 — Apache 2.4.57 с упоминанием совместимости 2.2

@@ -1,0 +1,446 @@
+[
+ {
+  "id": "R1",
+  "title": "ВМ 192.168.0.146 (Kubernetes): открыты 22, 80, 111, 443",
+  "label": true,
+  "scan_dir": "data/vm"
+ },
+ {
+  "id": "R2",
+  "title": "Тестовый nginx с /.git/HEAD",
+  "label": true,
+  "scan_dir": "data/stand"
+ },
+ {
+  "id": "P1",
+  "title": "Открыт Telnet",
+  "label": true,
+  "findings": [
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 23,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 23",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   },
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 23,
+    "service": "telnet",
+    "version": "Linux telnetd",
+    "description": "telnet Linux telnetd на порту 23",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P2",
+  "title": "SQL-инъекция найдена Nikto",
+  "label": true,
+  "findings": [
+   {
+    "source": "nikto",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "/login.php: возможна SQL injection",
+    "severity": "critical",
+    "cwe": "CWE-89",
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P3",
+  "title": "Apache 2.2.15 (устарел)",
+  "label": true,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 80,
+    "service": "http",
+    "version": "Apache httpd 2.2.15",
+    "description": "http Apache httpd 2.2.15 на порту 80",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P4",
+  "title": "kubelet 10250 открыт",
+  "label": true,
+  "findings": [
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 10250,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 10250",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   },
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 22,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 22",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P5",
+  "title": "SMB 445 открыт",
+  "label": true,
+  "findings": [
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 445,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 445",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P6",
+  "title": "RDP 3389 открыт",
+  "label": true,
+  "findings": [
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 3389,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 3389",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P7",
+  "title": "MySQL 3306 доступен из сети",
+  "label": true,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 3306,
+    "service": "mysql",
+    "version": "MySQL 5.7.30",
+    "description": "mysql MySQL 5.7.30 на порту 3306",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P8",
+  "title": "OpenSSH 7.4 (старая версия)",
+  "label": true,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 22,
+    "service": "ssh",
+    "version": "OpenSSH 7.4",
+    "description": "ssh OpenSSH 7.4 на порту 22",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P9",
+  "title": "FTP с анонимным входом",
+  "label": true,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 21,
+    "service": "ftp",
+    "version": "vsftpd 3.0.3",
+    "description": "ftp vsftpd 3.0.3 на порту 21",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   },
+   {
+    "source": "nikto",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "FTP: anonymous login allowed",
+    "severity": "high",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P10",
+  "title": "Доступен файл /.env",
+  "label": true,
+  "findings": [
+   {
+    "source": "nikto",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "/.env: файл конфигурации с секретами доступен",
+    "severity": "high",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "P11",
+  "title": ".git найден на другом сервере",
+  "label": true,
+  "findings": [
+   {
+    "source": "nikto",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "/.git/HEAD: Git HEAD file found.",
+    "severity": "high",
+    "cwe": "CWE-538",
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N1",
+  "title": "Только SSH 9.2",
+  "label": false,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 22,
+    "service": "ssh",
+    "version": "OpenSSH 9.2p1",
+    "description": "ssh OpenSSH 9.2p1 на порту 22",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   },
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 22,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 22",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N2",
+  "title": "nginx без части заголовков",
+  "label": false,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 80,
+    "service": "http",
+    "version": "nginx 1.24.0",
+    "description": "http nginx 1.24.0 на порту 80",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   },
+   {
+    "source": "nikto",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "Suggested security header missing: referrer-policy.",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N3",
+  "title": "Чистые 80 и 443",
+  "label": false,
+  "findings": [
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 80",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   },
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 443,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 443",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N4",
+  "title": "Только rpcbind",
+  "label": false,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 111,
+    "service": "rpcbind",
+    "version": "2-4",
+    "description": "rpcbind 2-4 на порту 111",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N5",
+  "title": "Порт 8080 с нормальным приложением",
+  "label": false,
+  "findings": [
+   {
+    "source": "masscan",
+    "type": "service",
+    "port": 8080,
+    "service": null,
+    "version": null,
+    "description": "Открытый порт 8080",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N6",
+  "title": "Нет X-Frame-Options на статическом сайте",
+  "label": false,
+  "findings": [
+   {
+    "source": "nikto",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "The anti-clickjacking X-Frame-Options header is not present.",
+    "severity": "medium",
+    "cwe": "CWE-1021",
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N7",
+  "title": "Apache 2.4.57 (актуальный)",
+  "label": false,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 80,
+    "service": "http",
+    "version": "Apache httpd 2.4.57",
+    "description": "http Apache httpd 2.4.57 на порту 80",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "N8",
+  "title": "Пустой результат (хост без открытых портов)",
+  "label": false,
+  "findings": []
+ },
+ {
+  "id": "T1",
+  "title": "Каталог /.github/ (публичные workflow) — не утечка",
+  "label": false,
+  "findings": [
+   {
+    "source": "nikto",
+    "type": "service",
+    "port": 80,
+    "service": null,
+    "version": null,
+    "description": "/.github/workflows/: каталог найден",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ },
+ {
+  "id": "T2",
+  "title": "Apache 2.4.57 с упоминанием совместимости 2.2",
+  "label": false,
+  "findings": [
+   {
+    "source": "nmap",
+    "type": "service",
+    "port": 80,
+    "service": "http",
+    "version": "Apache httpd 2.4.57 (compat 2.2)",
+    "description": "http Apache httpd 2.4.57 (compat 2.2) на порту 80",
+    "severity": "low",
+    "cwe": null,
+    "cve": null
+   }
+  ]
+ }
+]

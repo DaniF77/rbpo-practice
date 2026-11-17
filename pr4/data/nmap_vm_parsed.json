@@ -1,0 +1,8 @@
+{"hosts": [
+ {"address": "192.168.0.146", "hostname": "", "ports": [
+  {"port": 22, "protocol": "tcp", "state": "open", "service": "ssh", "version": "OpenSSH 9.2p1 Debian 2+deb12u10"},
+  {"port": 80, "protocol": "tcp", "state": "open", "service": "http", "version": "Golang net/http server"},
+  {"port": 111, "protocol": "tcp", "state": "open", "service": "rpcbind", "version": "2-4"},
+  {"port": 443, "protocol": "tcp", "state": "open", "service": "http", "version": "Golang net/http server"}
+ ]}
+]}

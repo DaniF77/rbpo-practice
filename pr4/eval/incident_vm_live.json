@@ -1,0 +1,202 @@
+{
+  "scan_id": "2761574b-5723-441d-9a5a-083611e5fd8f",
+  "timestamp": "2026-11-17T23:28:36Z",
+  "target": "192.168.0.146",
+  "findings": [
+    {
+      "source": "masscan",
+      "type": "port",
+      "port": 80,
+      "protocol": "tcp",
+      "state": "open",
+      "severity": "low",
+      "description": "Открытый порт 80",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "masscan",
+      "type": "port",
+      "port": 443,
+      "protocol": "tcp",
+      "state": "open",
+      "severity": "low",
+      "description": "Открытый порт 443",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "masscan",
+      "type": "port",
+      "port": 6443,
+      "protocol": "tcp",
+      "state": "open",
+      "severity": "high",
+      "description": "Открытый порт 6443",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "masscan",
+      "type": "port",
+      "port": 111,
+      "protocol": "tcp",
+      "state": "open",
+      "severity": "medium",
+      "description": "Открытый порт 111",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "masscan",
+      "type": "port",
+      "port": 10250,
+      "protocol": "tcp",
+      "state": "open",
+      "severity": "high",
+      "description": "Открытый порт 10250",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "masscan",
+      "type": "port",
+      "port": 22,
+      "protocol": "tcp",
+      "state": "open",
+      "severity": "medium",
+      "description": "Открытый порт 22",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "nikto",
+      "type": "vulnerability",
+      "port": 80,
+      "protocol": "http",
+      "state": "found",
+      "severity": "low",
+      "description": "Suggested security header missing: strict-transport-security.",
+      "url": "/",
+      "cwe": "CWE-693",
+      "cve": null
+    },
+    {
+      "source": "nikto",
+      "type": "vulnerability",
+      "port": 80,
+      "protocol": "http",
+      "state": "found",
+      "severity": "low",
+      "description": "Suggested security header missing: content-security-policy.",
+      "url": "/",
+      "cwe": "CWE-693",
+      "cve": null
+    },
+    {
+      "source": "nikto",
+      "type": "vulnerability",
+      "port": 80,
+      "protocol": "http",
+      "state": "found",
+      "severity": "low",
+      "description": "Suggested security header missing: referrer-policy.",
+      "url": "/",
+      "cwe": "CWE-693",
+      "cve": null
+    },
+    {
+      "source": "nikto",
+      "type": "vulnerability",
+      "port": 80,
+      "protocol": "http",
+      "state": "found",
+      "severity": "low",
+      "description": "Suggested security header missing: permissions-policy.",
+      "url": "/",
+      "cwe": "CWE-693",
+      "cve": null
+    },
+    {
+      "source": "nikto",
+      "type": "vulnerability",
+      "port": 80,
+      "protocol": "http",
+      "state": "found",
+      "severity": "medium",
+      "description": "X-Frame-Options header is deprecated and was replaced with the Content-Security-Policy HTTP header with the frame-ancestors directive.",
+      "url": "/",
+      "cwe": "CWE-1021",
+      "cve": null
+    },
+    {
+      "source": "nmap",
+      "type": "service",
+      "port": 22,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "ssh",
+      "version": "OpenSSH 9.2p1 Debian 2+deb12u10",
+      "severity": "low",
+      "description": "ssh OpenSSH 9.2p1 Debian 2+deb12u10 на порту 22",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "nmap",
+      "type": "service",
+      "port": 80,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "http",
+      "version": "Golang net/http server",
+      "severity": "low",
+      "description": "http Golang net/http server на порту 80",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "nmap",
+      "type": "service",
+      "port": 111,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "rpcbind",
+      "version": "2-4",
+      "severity": "low",
+      "description": "rpcbind 2-4 на порту 111",
+      "cwe": null,
+      "cve": null
+    },
+    {
+      "source": "nmap",
+      "type": "service",
+      "port": 443,
+      "protocol": "tcp",
+      "state": "open",
+      "service": "http",
+      "version": "Golang net/http server",
+      "severity": "low",
+      "description": "http Golang net/http server на порту 443",
+      "cwe": null,
+      "cve": null
+    }
+  ],
+  "incident": {
+    "detected": true,
+    "risk_score": 8.5,
+    "priority": "P2",
+    "category": "unauthorized_access, misconfiguration",
+    "recommendations": [
+      "Закрыть порты 6443 и 10250 межсетевым экраном",
+      "Разрешить доступ к API Kubernetes только с адресов администраторов",
+      "Добавить заголовок X-Frame-Options: DENY",
+      "Отключить rpcbind, если NFS не используется"
+    ],
+    "triggered_rules": [
+      "Открыт API Kubernetes или kubelet",
+      "Отсутствие X-Frame-Options",
+      "Открыт rpcbind"
+    ]
+  }
+}

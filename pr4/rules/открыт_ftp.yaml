@@ -1,0 +1,10 @@
+# создано RuleManager 2026-11-18, версия правила 1
+- name: "Открыт FTP"
+  category: "unauthorized_access"
+  risk_score: 8.0
+  conditions:
+    - field: "service"
+      operator: "eq"
+      value: "ftp"
+  recommendations:
+    - "Заменить FTP на SFTP"

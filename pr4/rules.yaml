@@ -1,0 +1,94 @@
+threshold: 7.0
+rules:
+  - name: "Открытый Telnet"
+    category: "unauthorized_access"
+    risk_score: 9.0
+    conditions:
+      - field: "service"
+        operator: "eq"
+        value: "telnet"
+    recommendations:
+      - "Закрыть порт 23"
+      - "Использовать SSH вместо Telnet"
+
+  - name: "SQL-инъекция"
+    category: "data_breach"
+    risk_score: 9.5
+    conditions:
+      - field: "cwe"
+        operator: "eq"
+        value: "CWE-89"
+    recommendations:
+      - "Проверить параметризацию запросов"
+      - "Запустить повторное сканирование"
+
+  - name: "Устаревший Apache"
+    category: "vulnerable_component"
+    risk_score: 7.5
+    conditions:
+      - field: "version"
+        operator: "contains"
+        value: "apache"
+      - field: "version"
+        operator: "contains"
+        value: "2.2"
+    recommendations:
+      - "Обновить Apache до последней версии"
+
+  - name: "Доступный .git"
+    category: "information_disclosure"
+    risk_score: 8.0
+    conditions:
+      - field: "description"
+        operator: "contains"
+        value: ".git"
+    recommendations:
+      - "Закрыть доступ к /.git/ через конфигурацию веб-сервера"
+
+  - name: "Открыт API Kubernetes или kubelet"
+    category: "unauthorized_access"
+    risk_score: 8.5
+    conditions:
+      - field: "source"
+        operator: "eq"
+        value: "masscan"
+      - field: "port"
+        operator: "in"
+        value: [6443, 10250]
+    recommendations:
+      - "Закрыть порты 6443 и 10250 межсетевым экраном"
+      - "Разрешить доступ к API Kubernetes только с адресов администраторов"
+
+  - name: "Отсутствие X-Frame-Options"
+    category: "misconfiguration"
+    risk_score: 4.0
+    conditions:
+      - field: "description"
+        operator: "contains"
+        value: "X-Frame-Options"
+    recommendations:
+      - "Добавить заголовок X-Frame-Options: DENY"
+
+  - name: "Открыт rpcbind"
+    category: "misconfiguration"
+    risk_score: 5.0
+    conditions:
+      - field: "service"
+        operator: "eq"
+        value: "rpcbind"
+    recommendations:
+      - "Отключить rpcbind, если NFS не используется"
+
+  - name: "Открыт SMB (445)"
+    category: "unauthorized_access"
+    risk_score: 8.0
+    conditions:
+      - field: "source"
+        operator: "eq"
+        value: "masscan"
+      - field: "port"
+        operator: "eq"
+        value: 445
+    recommendations:
+      - "Закрыть порт 445 на межсетевом экране"
+      - "Отключить SMBv1 и ограничить доступ по сети"

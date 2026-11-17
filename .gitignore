@@ -25,3 +25,7 @@ Thumbs.db
 # ПР2: собранный бинарник
 pr2/cpp/vulnerable
 *.db
+pr4/api
+pr4/nmap_parser
+pr4/*.class
+pr4/scan_results/

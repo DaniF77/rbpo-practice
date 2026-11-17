@@ -1,0 +1,10 @@
+# создано RuleManager 2026-11-18, версия правила 1
+- name: "Доступен .env"
+  category: "information_disclosure"
+  risk_score: 8.5
+  conditions:
+    - field: "description"
+      operator: "contains"
+      value: ".env"
+  recommendations:
+    - "Убрать .env из корня сайта"

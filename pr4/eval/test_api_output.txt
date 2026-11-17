@@ -1,0 +1,31 @@
+$ curl -s http://127.0.0.1:8080/health
+{"status":"ok"}
+
+$ curl -s -X POST http://127.0.0.1:8080/scan -d "{\"target\":\"127.0.0.1; id\"}"   # проверка защиты от инъекции
+{"error":"нужен JSON {\"target\":\"<IP-адрес>\"}"}
+ [HTTP 400]
+
+$ curl -s -X POST http://127.0.0.1:8080/scan -d "{\"target\":\"127.0.0.1\"}"
+target: 127.0.0.1 | находок: 16
+detected: True | priority: P2 | risk_score: 8
+category: information_disclosure, misconfiguration, unauthorized_access
+rules: ['Доступный .git', 'Отсутствие X-Frame-Options', 'Открыт SMB (445)']
+   masscan low 135 Открытый порт 135
+   masscan low 902 Открытый порт 902
+   masscan critical 445 Открытый порт 445
+   masscan low 80 Открытый порт 80
+   masscan low 912 Открытый порт 912
+   nikto medium 80 nginx/1.24.0 appears to be outdated (current is at least 1.31.3).
+   nikto low 80 Suggested security header missing: permissions-policy.
+   nikto medium 80 Suggested security header missing: x-content-type-options.
+   nikto low 80 Suggested security header missing: strict-transport-security.
+   nikto low 80 Suggested security header missing: referrer-policy.
+   nikto low 80 Suggested security header missing: content-security-policy.
+   nikto high 80 /.git/HEAD: Git HEAD file found. Full repo details may be present.
+   nikto medium 80 X-Frame-Options header is deprecated and was replaced with the Content
+   nikto medium 80 The X-Content-Type-Options header is not set. This could allow the use
+   nmap low 80 http nginx 1.24.0 на порту 80
+   nmap low 8080 http Golang net/http server на порту 8080
+
+$ curl -s http://127.0.0.1:8080/incidents | python3 -c "..."
+хранится целей: ['127.0.0.1']

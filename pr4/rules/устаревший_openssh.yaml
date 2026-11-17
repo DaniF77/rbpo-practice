@@ -1,0 +1,10 @@
+# создано RuleManager 2026-11-18, версия правила 1
+- name: "Устаревший OpenSSH"
+  category: "vulnerable_component"
+  risk_score: 7.5
+  conditions:
+    - field: "version"
+      operator: "contains"
+      value: "OpenSSH 7."
+  recommendations:
+    - "Обновить OpenSSH"
