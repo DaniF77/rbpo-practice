@@ -1,0 +1,30 @@
+$ curl "http://localhost:5055/reliability?t=100&i=30&Ec=30"
+{
+    "corrected_errors": 30,
+    "jelinski_moranda": {
+        "MTTF": 500.0,
+        "R": 0.8187,
+        "lambda": 0.002
+    },
+    "nelson_corcoran": {
+        "R_corcoran": 0.986,
+        "R_nelson": 0.954,
+        "R_simple": 0.97
+    },
+    "schuman": {
+        "MTTF": 5000000.0,
+        "R": 0.99998,
+        "lambda": 2e-07
+    },
+    "time_hours": 100.0
+}
+
+$ curl "http://localhost:5055/reliability?t=200&i=40&Ec=45"   # больше исправлено ошибок, дольше время
+JM R = 0.8187  MTTF = 1000.0 | Schuman R = 0.99999
+
+$ curl "http://localhost:5055/reliability?i=60"   # ошибок исправлено больше, чем было (N0=50)
+{"error":"Число исправленных ошибок не может превышать начальное"}
+ [HTTP 400]
+
+$ curl -s -o /dev/null -w "%{http_code}" http://localhost:5055/   # остальное приложение работает
+200
