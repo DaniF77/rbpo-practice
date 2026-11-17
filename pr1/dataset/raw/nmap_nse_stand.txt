@@ -1,0 +1,11 @@
+# Nmap 7.94SVN scan initiated Wed Nov 18 01:18:52 2026 as: nmap -p 80 --script=http-enum,http-security-headers -oN nmap_nse_stand.txt 127.0.0.1
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000032s latency).
+
+Bug in http-security-headers: no string output.
+PORT   STATE SERVICE
+80/tcp open  http
+| http-enum: 
+|_  /.git/HEAD: Git folder
+
+# Nmap done at Wed Nov 18 01:18:54 2026 -- 1 IP address (1 host up) scanned in 1.28 seconds

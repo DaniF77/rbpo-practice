@@ -1,0 +1,61 @@
+[
+   {
+      "end_time" : "2026-11-18 01:18:30 +0300",
+      "host" : "192.168.0.146",
+      "ip" : "192.168.0.146",
+      "port" : 443,
+      "server_banner" : null,
+      "ssl_info" : {
+         "altnames" : "538855ae283080d6c3d1f55655009c58.be087530cfbff38f9c77a61426b9ca6a.traefik.default",
+         "ciphers" : "TLS_AES_128_GCM_SHA256",
+         "cn" : "TRAEFIK",
+         "issuer" : "/CN=TRAEFIK DEFAULT CERT",
+         "subject" : "/CN=TRAEFIK DEFAULT CERT"
+      },
+      "start_time" : "2026-11-18 01:18:23 +0300",
+      "vulnerabilities" : [
+         {
+            "id" : "013587",
+            "method" : "GET",
+            "msg" : "Suggested security header missing: strict-transport-security.",
+            "references" : "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security",
+            "url" : "/"
+         },
+         {
+            "id" : "013587",
+            "method" : "GET",
+            "msg" : "Suggested security header missing: permissions-policy.",
+            "references" : "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy",
+            "url" : "/"
+         },
+         {
+            "id" : "013587",
+            "method" : "GET",
+            "msg" : "Suggested security header missing: referrer-policy.",
+            "references" : "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy",
+            "url" : "/"
+         },
+         {
+            "id" : "013587",
+            "method" : "GET",
+            "msg" : "Suggested security header missing: content-security-policy.",
+            "references" : "https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP",
+            "url" : "/"
+         },
+         {
+            "id" : "999993",
+            "method" : "GET",
+            "msg" : "Hostname '192.168.0.146' does not match certificate names (CN: TRAEFIK, SAN: 538855ae283080d6c3d1f55655009c58.be087530cfbff38f9c77a61426b9ca6a.traefik.default).",
+            "references" : "https://cwe.mitre.org/data/definitions/297.html",
+            "url" : "/"
+         },
+         {
+            "id" : "007342",
+            "method" : "GET",
+            "msg" : "X-Frame-Options header is deprecated and was replaced with the Content-Security-Policy HTTP header with the frame-ancestors directive.",
+            "references" : "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Frame-Options",
+            "url" : "/"
+         }
+      ]
+   }
+]

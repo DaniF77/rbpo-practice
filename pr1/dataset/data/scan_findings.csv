@@ -1,0 +1,14 @@
+﻿finding_id,tool,target_ip,port,severity,category,description,expert_comment
+1,Nmap,192.168.0.146,22,Medium,Open Port,SSH (OpenSSH 9.2p1 Debian 2+deb12u10) доступен по сети,"Разрешить доступ только с доверенных адресов (firewall), отключить вход по паролю, оставить только ключи"
+2,Nmap,192.168.0.146,80,Low,Service,"HTTP: Golang net/http (ingress Traefik), все пути отдают 404 text/plain","Включить принудительный редирект на HTTPS, не публиковать лишние сервисы"
+3,Nmap,192.168.0.146,111,Medium,Open Port,"Открыт rpcbind/portmapper (RPC 100000, версии 2-4)",На узле он не нужен: отключить службу rpcbind или закрыть порт на firewall
+4,Nmap,192.168.0.146,443,Low,Certificate,HTTPS на Traefik с самоподписанным сертификатом TRAEFIK DEFAULT CERT,Выпустить нормальный сертификат (Let's Encrypt или внутренний CA)
+5,Masscan,192.168.0.146,6443,High,Open Port,Открыт порт 6443 (по контексту API-сервер Kubernetes/k3s),"Ограничить доступ по IP/сети, убедиться что анонимный доступ к API выключен"
+6,Masscan,192.168.0.146,10250,High,Open Port,Открыт порт 10250 (по контексту kubelet API),Закрыть снаружи кластера; kubelet без авторизации позволяет выполнять команды в подах
+7,Nikto,192.168.0.146,80,Medium,Missing Header,"Нет заголовков CSP, HSTS, Referrer-Policy, Permissions-Policy",Добавить заголовки безопасности в middleware Traefik
+8,Nikto,192.168.0.146,443,Medium,Missing Header,"Нет заголовков CSP, HSTS, Referrer-Policy, Permissions-Policy",Добавить заголовки безопасности в middleware Traefik
+9,Nikto,192.168.0.146,443,Low,Certificate,Имя 192.168.0.146 не совпадает с CN сертификата TRAEFIK (CWE-297),Выпустить сертификат на реальное имя узла
+10,Nikto,127.0.0.1,80,High,Exposed Path,Доступен /.git/HEAD: может быть раскрыт репозиторий (тестовая «ловушка» стенда),"Закрыть доступ в nginx: location ~ /\.git { deny all; }, не размещать .git в корне сайта"
+11,Nmap,127.0.0.1,80,High,Exposed Path,NSE http-enum и http-git подтвердили Git-папку по адресу /.git/,Закрыть доступ к /.git/ (см. предыдущую находку)
+12,Nikto,127.0.0.1,80,Medium,Missing Header,"Нет заголовков CSP, Referrer-Policy, HSTS, X-Content-Type-Options, Permissions-Policy",Добавить заголовки в конфиг nginx (add_header)
+13,Nikto,127.0.0.1,80,Low,Outdated Software,nginx/1.24.0 помечен Nikto как устаревший (в Ubuntu версия с бэкпортами патчей),Проверить установку security-обновлений дистрибутива и обновить nginx
